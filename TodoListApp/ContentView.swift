@@ -9,8 +9,9 @@ import SwiftUI
 
 struct ContentView: View {
     @State var todoTextField: String = ""
-    @State var todoDataArray: [String] = []
-    @State var toggleButton: Bool = false
+    @State var todoDataArray: [(String, Bool)] = []
+//    @State var toggleButton: Bool = false
+    
     
     var body: some View {
         VStack {
@@ -48,9 +49,12 @@ struct ContentView: View {
             .padding()
             
             
-            ForEach(todoDataArray, id: \.self) { todo in
-                Toggle(isOn: $toggleButton) {
-                    Text(todo)
+            ForEach(todoDataArray.indices, id: \.self) { index in
+                Toggle(isOn: Binding(
+                    get: { self.todoDataArray[index].1 },
+                    set: { newValue in self.todoDataArray[index].1 = newValue }
+                )) {
+                    Text(self.todoDataArray[index].0)
                         .foregroundColor(.mint)
                         .font(.headline.bold())
                 }
@@ -72,7 +76,7 @@ struct ContentView: View {
     
     
     func saveTodo() {
-        todoDataArray.append(todoTextField)
+        todoDataArray.append((todoTextField, false))
         todoTextField = ""
     }
 }
